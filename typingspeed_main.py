@@ -15,28 +15,37 @@ with open ("1-1000.txt", "r") as file:
 ### Functions
 
 score = 0
-
+# word_list = ["word1", "word2"]
 def next_word():
     word = random.choice(words)
-    word_label.config(text=word)
-    return word
+    word_list.append(word)
+
+    word_label.config(text=word_list[-2])
+    last_word.config(text=word_list[-3])
+    following_word.config(text=word_list[-1])
+
+    return word_list
 
 def check_word(word):
     global score
+    global last_word
     entered_word = entry.get()
     print(entered_word)
     print(f"{word} top")
     if entered_word == word:
         score += 1
         score_field.config(text=f"Score: {score}")
+        last_word.config(fg="green")
     else:
         score = score
+        last_word.config(fg="red")
     
 def enter(item):
-    global word
-    check_word(word)
-    word = next_word()
+    global word_list
+    check_word(word_list[-2])
+    word_list = next_word()
     entry.delete(0, 'end')
+    print(word_list)
 
 def count_down(count):
     timer.config(text=f"{count}")
@@ -52,14 +61,14 @@ window = tk.Tk()
 window.title("Typing speedtest")
 window.config(padx=20, pady=20)
 
-# last_word = tk.Label(text="last word", font=("Arial", 16))
-# last_word.grid(column=1, row=1)
+last_word = tk.Label(text="last word", font=("Arial", 16))
+last_word.grid(column=1, row=1)
 
 word_label = tk.Label(text="The word will appear here.", font=("Arial", 16))
 word_label.grid(column=2, row=1)
 
-# following_word = tk.Label(text="next word", font=("Arial", 16))
-# following_word.grid(column=3, row=1)
+following_word = tk.Label(text="next word", font=("Arial", 16))
+following_word.grid(column=3, row=1)
 
 entry = tk.Entry(width=20)
 entry.grid(column=2, row=2)
@@ -71,6 +80,7 @@ timer = tk.Label(text="timer")
 timer.grid(column=3, row=2)
 
 # first word
+word_list = ["", random.choice(words)]
 word = next_word()
 count_down(60)
 
